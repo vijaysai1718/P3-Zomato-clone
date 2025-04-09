@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
  name: zomato
 spec:
- replica: 2
+ replicas: 2
  selector:
     matchLabels:
      name: "zomato"
@@ -16,7 +16,7 @@ spec:
      - name: zomatoimage
        image: vijaysai1718/zomato:latest
        ports:
-        - containerPorts: 3000
+        - containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
