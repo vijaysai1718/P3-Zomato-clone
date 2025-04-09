@@ -5,18 +5,18 @@ metadata:
 spec:
  replica: 2
  selector:
-  matchLabels:
-   name: "zomato"
+    matchLabels:
+    name: "zomato"
 template:
- metadata:
-  labels:
-   name: "zomato"
-  spec:
-   containers:
-    - name: zomatoimage
-      image: vijaysai1718/zomato:latest
-      ports:
-       - containerPorts: 3000
+    metadata:
+      labels:
+       name: "zomato"
+    spec:
+      containers:
+        - name: zomatoimage
+          image: vijaysai1718/zomato:latest
+          ports:
+          - containerPorts: 3000
 ---
 apiVersion: v1
 kind: Service
