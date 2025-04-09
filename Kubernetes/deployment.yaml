@@ -5,7 +5,7 @@ metadata:
 spec:
  replica: 2
  selector:
-  matchLables:
+  matchLabels:
    name: zomato
 template:
  metadata:
