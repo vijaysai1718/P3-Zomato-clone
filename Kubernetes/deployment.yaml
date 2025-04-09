@@ -27,6 +27,6 @@ spec:
   name: zomato
  type: LoadBalancer
  ports:
-  - protocol: tcp
+  - protocol: TCP
     port: 80
     targetPort: 3000
