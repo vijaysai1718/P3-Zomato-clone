@@ -6,11 +6,11 @@ spec:
  replica: 2
  selector:
   matchLabels:
-   name: zomato
+   name: "zomato"
 template:
  metadata:
   labels:
-   name: zomato
+   name: "zomato"
   spec:
    containers:
     - name: zomatoimage
@@ -24,7 +24,7 @@ metadata:
  name: serviceforzomato
 spec:
  selector:
-  name: zomato
+  name: "zomato"
  type: LoadBalancer
  ports:
   - protocol: TCP
