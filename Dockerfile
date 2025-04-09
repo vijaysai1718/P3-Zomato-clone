@@ -7,7 +7,7 @@ COPY package*.json .
 RUN npm install
 # Copying all files to the directory
 COPY . .
-RUN npm build
+RUN npm run build
 CMD ["npm", "start"]
 
 
