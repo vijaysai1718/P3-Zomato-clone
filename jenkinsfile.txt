@@ -1,0 +1,89 @@
+pipeline{
+    agent any 
+    tools {
+        jdk 'java17'
+        nodejs 'nodejs23'
+    }
+    environment{
+        SCANNER_HOME= tool 'sonarscanner'
+        EKS_CLUSTER_NAME= 'Expense'
+        AWS_DEFAULT_REGION= 'us-east-1'
+    }
+    stages(){
+        stage('clean workspace'){
+            steps{
+                cleanWs()
+            }
+        }
+        stage('git Checkout') {
+            steps{
+                git branch: 'main' , url: 'https://github.com/vijaysai1718/P3-Zomato-clone.git'
+            }
+        }
+        stage('sonar scanner'){
+            steps{
+                withSonarQubeEnv('sonarserver'){
+                 sh '''   $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=zomato \
+                 -Dsonar.projectKey=zomato \
+                 '''
+                }
+            }
+        }
+        stage('Quailty Gate'){
+            steps{
+                script{
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonarkey'
+                }
+            }
+        }
+		stage('trivy Scan'){
+		steps{
+		sh "trivy fs . >trivy.txt"
+		}
+		}
+        stage('Build Image'){
+            steps{
+                script{
+                    withDockerRegistry(credentialsId: 'docker') {
+             sh '''
+             docker build -t zomato .
+             docker tag zomato vijaysai1718/zomato:latest
+             docker push vijaysai1718/zomato:latest
+                '''}
+                   
+                }
+                
+            }
+        }
+	/*	stage('Image Scan'){
+		steps{
+		sh "trivy image vijaysai1718/zomato >trivy.txt"
+		}
+		}*/
+        stage(' Docker Run Container'){
+            steps{
+                sh '''
+                docker stop zomato || true
+                docker rm zomato || true 
+                docker run -d --name zomato -p 3000:3000 vijaysai1718/zomato:latest
+                
+                '''
+            }
+        }
+        stage('Kubernetes'){
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'aws', passwordVariable: 'AWS_SECRET_ACCESS_ID', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                sh '''
+                export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+                export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_ID
+                export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+                aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_DEFAULT_REGION
+                kubectl apply -f Kubernetes/deployment.yaml
+                '''
+                }
+            }
+        }
+        }
+}
+}
