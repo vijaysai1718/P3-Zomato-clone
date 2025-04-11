@@ -84,6 +84,11 @@ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/d
 mv /tmp/eksctl /usr/local/bin
 eksctl version
 VALIDATE $? "eksctl installation"
+# Helm
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+VALIDATE $? "helm installation"
 
 #Prometheus
  apt update &&  apt upgrade -y
