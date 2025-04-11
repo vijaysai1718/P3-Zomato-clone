@@ -27,7 +27,7 @@ resource "aws_security_group" "monitor_sg" {
 
  name = "monitor_sg"
  description = "allow ssh and http traffic"
- ingress= [for port in["9090","9100","8080","3000"]:{
+ ingress= [for port in["22","9090","9100","8080","3000"]:{
     description      = "Opening ports"
        from_port = port
     to_port = port
