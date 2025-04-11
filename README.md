@@ -39,4 +39,9 @@ Explore the code and contribute to the project:
 
 ## 🎉 **Happy Learning!**  
 
+## Creating  both server at a time
+``` for i in jenkins-cluster Monitoring ; do cd$i; terraform apply -auto-approve; cd .. ; done ```
+## Destorying  server
+``` for i in Monitoring jenkins-cluster ; do cd $i ; terraform destroy -auto-approve ; cd .. ; done ```
+
 **Vijay sai**

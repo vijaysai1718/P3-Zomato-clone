@@ -1,0 +1,5 @@
+    bucket = "vijay-remote-state"
+    key    = "Jenkins-cluster"
+    region = "us-east-1"
+    dynamodb_table = "vijay-remotestate-lock"
+  
